@@ -23,3 +23,13 @@ springdoc:
   swagger-ui:
     path: /swagger
     operations-sorter: alpha
+
+# --- 카카오 로그인 및 JWT 설정 추가 ---
+kakao:
+  client-id: ${KAKAO_CLIENT_ID:ad6819c72b512ad17b6b7ebd4210ead1}
+  redirect-uri: ${KAKAO_REDIRECT_URI:https://smoking-area-21yb.onrender.com/api/auth/kakao/callback}
+
+jwt:
+  # 256비트 이상의 문자열로, 실제 서비스 구동 시 안전한 키로 변경하는 것이 좋습니다.
+  secret: ${JWT_SECRET:your_custom_secret_key_must_be_over_32_bytes_long_here_1234567890}
+  expiration-ms: 86400000 # 토큰 유효 기간 (24시간)
