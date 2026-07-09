@@ -1,18 +1,19 @@
+server:
+  port: ${PORT:8080}
+
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/smoking_area_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: "0830"
+    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL}
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
         format_sql: true
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 springdoc:
   default-consumes-media-type: application/json
