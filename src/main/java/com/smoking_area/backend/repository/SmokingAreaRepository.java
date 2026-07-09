@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> {
-    List<SmokingArea> findByNameContainingOrAddressContaining(String nameKeyword, String addressKeyword);
+    List<SmokingArea> findByNameContainingOrAddressContaining(String name, String address);
 }

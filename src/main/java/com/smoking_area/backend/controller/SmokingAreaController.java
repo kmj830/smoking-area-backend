@@ -4,10 +4,7 @@ import com.smoking_area.backend.entity.SmokingArea;
 import com.smoking_area.backend.service.SmokingAreaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +22,25 @@ public class SmokingAreaController {
     public ResponseEntity<List<SmokingArea>> getAllSmokingAreas() {
         List<SmokingArea> areas = smokingAreaService.getAllSmokingAreas();
         return ResponseEntity.ok(areas);
+    }
+
+    /**
+     * 흡연구역 상세 정보 반환*/
+    @GetMapping("/{id}")
+    public ResponseEntity<SmokingArea> getSmokingAreaById(@PathVariable Long id) {
+        SmokingArea area = smokingAreaService.getSmokingAreaById(id);
+        if (area != null) {
+            return ResponseEntity.ok(area);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * 키워드로 흡연구역 검색*/
+    @GetMapping("/search")
+    public ResponseEntity<List<SmokingArea>> searchSmokingAreas(@RequestParam String keyword) {
+        List<SmokingArea> searchResults = smokingAreaService.searchSmokingAreas(keyword);
+        return ResponseEntity.ok(searchResults);
     }
 }

@@ -19,4 +19,18 @@ public class SmokingAreaService {
     public List<SmokingArea> getAllSmokingAreas() {
         return smokingAreaRepository.findAll();
     }
+
+    /**
+     * ID로 특정 흡연구역 상세 정보 조회
+     */
+    public SmokingArea getSmokingAreaById(Long id) {
+        return smokingAreaRepository.findById(id).orElse(null);
+    }
+
+    /**
+     * 키워드로 흡연구역 검색
+     */
+    public List<SmokingArea> searchSmokingAreas(String keyword) {
+        return smokingAreaRepository.findByNameContainingOrAddressContaining(keyword, keyword);
+    }
 }
