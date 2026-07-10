@@ -14,6 +14,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -31,9 +32,9 @@ public class AuthService {
     private String redirectUri;
 
     /**
-     * 카카오 로그인 전체 흐름 처리 (토큰 받기 -> 유저정보 조회 -> DB 저장 -> 자체 JWT 발급)
+     * 카카오 로그인 전체 흐름 처리 (토큰 받기 -> 유저정보 조회 -> DB 저장 -> 자체 JWT 발급 및 유저 정보 반환)
      */
-    public String kakaoLogin(String code) {
+    public Map<String, Object> kakaoLogin(String code) {
         // 1. 인가 코드로 카카오 Access Token 발급 요청
         String accessToken = getKakaoAccessToken(code);
 
@@ -48,7 +49,6 @@ public class AuthService {
         String nickname = (String) properties.get("nickname");
 
         // 4. DB 확인 후 가입 또는 기존 유저 정보 조회
-        // 기존 엔티티의 필수 필드인 role에 기본값 "USER"를 넘겨주도록 수정했습니다.
         User user = userRepository.findByKakaoId(kakaoId)
                 .orElseGet(() -> userRepository.save(
                         User.builder()
@@ -58,8 +58,20 @@ public class AuthService {
                                 .build()
                 ));
 
-        // 5. 우리 서비스 전용 자체 JWT 토큰 생성 후 반환
-        return jwtTokenProvider.createToken(user.getId(), user.getNickname());
+        // 5. 우리 서비스 전용 자체 JWT 토큰 생성
+        String jwtToken = jwtTokenProvider.createToken(user.getId(), user.getNickname());
+
+        // 6. 프론트엔드(Next.js) 규격에 맞춰 token과 user 오브젝트를 함께 응답 맵에 구성
+        Map<String, Object> result = new HashMap<>();
+        result.put("token", jwtToken);
+
+        Map<String, Object> userProfile = new HashMap<>();
+        userProfile.put("id", user.getKakaoId()); // 화면의 '카카오 ID' 영역에 매핑하기 위해 실제 kakaoId 주입
+        userProfile.put("nickname", user.getNickname()); // 실제 카카오 닉네임 주입
+
+        result.put("user", userProfile);
+
+        return result;
     }
 
     /**
