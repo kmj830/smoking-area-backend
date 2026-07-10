@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,4 +38,11 @@ public class SmokingArea extends BaseEntity {
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "operation_status")
+    private OperationStatus operationStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "congestion_level")
+    private CongestionLevel congestionLevel;
 }
