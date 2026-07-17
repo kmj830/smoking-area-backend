@@ -13,12 +13,12 @@ java {
 	}
 }
 
-// 빌드 환경에서 mavenCentral을 확실하게 동기화하도록 명시
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+
 
 	/*
 	 * Spring Boot 기본 기능
@@ -75,10 +75,10 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	/*
-	 * Cloudinary (코어와 http5 의존성 명시 순서 보정)
+	 * Cloudinary 표준 조합 (http5 대신 안정적인 버전으로 교체)
 	 */
-	implementation 'com.cloudinary:cloudinary-core:1.39.0'
-	implementation 'com.cloudinary:cloudinary-http5:1.39.0'
+	implementation 'com.cloudinary:cloudinary-taglib:1.36.0'
+	implementation 'com.cloudinary:cloudinary-http44:1.36.0'
 
 	/*
 	 * 테스트
