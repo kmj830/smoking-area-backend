@@ -74,8 +74,9 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
+// 기존 implementation 'com.cloudinary:cloudinary-http5:1.39.0' 대신 아래 두 가지를 명시해 보세요.
+	implementation 'com.cloudinary:cloudinary-core:1.39.0'
 	implementation 'com.cloudinary:cloudinary-http5:1.39.0'
-
 	/*
 	 * 테스트
 	 */
