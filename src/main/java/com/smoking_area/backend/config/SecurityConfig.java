@@ -28,6 +28,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/smoking-areas/**").permitAll()
                         .requestMatchers("/swagger/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers("/admin/**", "/static/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/api/admin/**").permitAll()
                         .anyRequest().authenticated())
 
                 // --- 추가된 부분: 기본 아이디/비밀번호 검사기 앞에 우리가 만든 JWT 필터를 꽂아 넣습니다. ---
