@@ -9,6 +9,9 @@ import com.smoking_area.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +21,7 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final UserRepository userRepository;
     private final SmokingAreaRepository smokingAreaRepository;
+    private final ImageUploadService imageUploadService;
 
     /**
      * 제보 등록
@@ -86,6 +90,61 @@ public class ReportService {
                 savedReport.getId(),
                 "제보가 완료되었습니다."
         );
+    }
+
+    /**
+     * 제보에 이미지 첨부 (제보 등록 직후 별도로 호출)
+     */
+    @Transactional
+    public ReportResponse attachImage(
+            Long reportId,
+            Long userId,
+            MultipartFile image
+    ) {
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() ->
+                        new RuntimeException("제보를 찾을 수 없습니다.")
+                );
+
+        if (!report.getUser().getId().equals(userId)) {
+            throw new RuntimeException(
+                    "본인이 제보한 건에만 이미지를 첨부할 수 있습니다."
+            );
+        }
+
+        if (report.getReportStatus() != ReportStatus.PENDING) {
+            throw new RuntimeException(
+                    "이미 처리된 제보에는 이미지를 첨부할 수 없습니다."
+            );
+        }
+
+        String imageUrl = imageUploadService.upload(image);
+        report.setImageUrl(imageUrl);
+
+        return new ReportResponse(
+                report.getId(),
+                "이미지가 첨부되었습니다."
+        );
+    }
+
+    /**
+     * 어드민 - 제보 목록 조회 (status 미지정 시 전체)
+     */
+    public List<Report> listReports(ReportStatus status) {
+        if (status == null) {
+            return reportRepository.findAllByOrderByCreatedAtDesc();
+        }
+        return reportRepository.findByReportStatusOrderByCreatedAtDesc(status);
+    }
+
+    /**
+     * 어드민 - 제보 상세 조회
+     */
+    public Report getReport(Long reportId) {
+        return reportRepository.findById(reportId)
+                .orElseThrow(() ->
+                        new RuntimeException("제보를 찾을 수 없습니다.")
+                );
     }
 
     /**
@@ -217,16 +276,7 @@ public class ReportService {
             Long reportId,
             Long adminUserId
     ) {
-        User admin = userRepository.findById(adminUserId)
-                .orElseThrow(() ->
-                        new RuntimeException("관리자를 찾을 수 없습니다.")
-                );
-
-        if (!"ADMIN".equals(String.valueOf(admin.getRole()))) {
-            throw new RuntimeException(
-                    "관리자만 승인할 수 있습니다."
-            );
-        }
+        requireAdmin(adminUserId);
 
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() ->
@@ -267,6 +317,55 @@ public class ReportService {
     }
 
     /**
+     * 관리자 제보 반려
+     */
+    @Transactional
+    public ReportResponse rejectReport(
+            Long reportId,
+            Long adminUserId,
+            String reason
+    ) {
+        requireAdmin(adminUserId);
+
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() ->
+                        new RuntimeException("제보를 찾을 수 없습니다.")
+                );
+
+        if (report.getReportStatus() != ReportStatus.PENDING) {
+            throw new RuntimeException(
+                    "이미 처리된 제보입니다."
+            );
+        }
+
+        report.setReportStatus(ReportStatus.REJECTED);
+        report.setRejectReason(reason);
+
+        return new ReportResponse(
+                report.getId(),
+                "반려 처리되었습니다."
+        );
+    }
+
+    /**
+     * 요청자가 관리자인지 검증하고 User를 반환한다.
+     */
+    private User requireAdmin(Long adminUserId) {
+        User admin = userRepository.findById(adminUserId)
+                .orElseThrow(() ->
+                        new RuntimeException("관리자를 찾을 수 없습니다.")
+                );
+
+        if (!"ADMIN".equals(String.valueOf(admin.getRole()))) {
+            throw new RuntimeException(
+                    "관리자만 처리할 수 있습니다."
+            );
+        }
+
+        return admin;
+    }
+
+    /**
      * 신규 흡연구역 제보 승인
      */
     private void approveNewSmokingAreaReport(Report report) {
@@ -297,6 +396,10 @@ public class ReportService {
         smokingArea.setLatitude(report.getLatitude());
         smokingArea.setLongitude(report.getLongitude());
 
+        if (report.getImageUrl() != null) {
+            smokingArea.setImageUrl(report.getImageUrl());
+        }
+
         SmokingArea savedSmokingArea =
                 smokingAreaRepository.save(smokingArea);
 
@@ -319,6 +422,10 @@ public class ReportService {
         smokingArea.setOperationStatus(
                 report.getOperationStatus()
         );
+
+        if (report.getImageUrl() != null) {
+            smokingArea.setImageUrl(report.getImageUrl());
+        }
     }
 
     /**
@@ -337,6 +444,10 @@ public class ReportService {
         smokingArea.setCongestionLevel(
                 report.getCongestionLevel()
         );
+
+        if (report.getImageUrl() != null) {
+            smokingArea.setImageUrl(report.getImageUrl());
+        }
     }
 
     /**

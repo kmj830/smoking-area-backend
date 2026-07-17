@@ -80,9 +80,21 @@ public class Report extends BaseEntity {
     private CongestionLevel congestionLevel;
 
     /**
+     * 제보자가 첨부한 이미지 URL (Cloudinary)
+     */
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;
+
+    /**
      * 관리자 처리 상태
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "report_status", nullable = false, length = 30)
     private ReportStatus reportStatus = ReportStatus.PENDING;
+
+    /**
+     * 관리자 반려 사유 (반려 시에만 값 존재)
+     */
+    @Column(name = "reject_reason", length = 300)
+    private String rejectReason;
 }
