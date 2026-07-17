@@ -18,28 +18,66 @@ repositories {
 }
 
 dependencies {
+
+	/*
+	 * Spring Boot 기본 기능
+	 */
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
+	/*
+	 * Swagger
+	 */
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2'
+
+	/*
+	 * Lombok
+	 */
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+
 	testCompileOnly 'org.projectlombok:lombok'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
-	// 카카오 로그인 및 JWT 관련 추가 의존성
+	/*
+	 * 개발 도구
+	 */
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	/*
+	 * 실제 애플리케이션 실행용 PostgreSQL
+	 */
+	runtimeOnly 'org.postgresql:postgresql'
+
+	/*
+	 * 테스트 실행용 H2 메모리 데이터베이스
+	 */
+	testRuntimeOnly 'com.h2database:h2'
+
+	/*
+	 * Spring Security
+	 */
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	/*
+	 * WebClient 사용
+	 */
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	/*
+	 * JWT
+	 */
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	testImplementation 'org.springframework.security:spring-security-test'
+
+	/*
+	 * 테스트
+	 */
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
