@@ -17,14 +17,17 @@ spring:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      maximum-pool-size: ${SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE:4}
+      minimum-idle: ${SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE:1}
 
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        show_sql: true
-        format_sql: true
+        show_sql: ${HIBERNATE_SHOW_SQL:false}
+        format_sql: ${HIBERNATE_FORMAT_SQL:false}
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   servlet:
@@ -44,12 +47,11 @@ springdoc:
 
 # --- 카카오 로그인 및 JWT 설정 추가 ---
 kakao:
-  client-id: ${KAKAO_CLIENT_ID:ad6819c72b512ad17b6b7ebd4210ead1}
+  client-id: ${KAKAO_CLIENT_ID}
   redirect-uri: ${KAKAO_REDIRECT_URI:http://localhost:3000/mypage}
 
 jwt:
-  # 256비트 이상의 문자열로, 실제 서비스 구동 시 안전한 키로 변경하는 것이 좋습니다.
-  secret: ${JWT_SECRET:your_custom_secret_key_must_be_over_32_bytes_long_here_1234567890}
+  secret: ${JWT_SECRET}
   expiration-ms: 86400000 # 토큰 유효 기간 (24시간)
 
 # --- 제보 이미지 업로드(Cloudinary) 및 어드민 페이지 설정 추가 ---
