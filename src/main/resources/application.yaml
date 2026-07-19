@@ -1,12 +1,6 @@
 server:
   port: ${PORT:8080}
 
-springdoc:
-  api-docs:
-    enabled: ${SPRINGDOC_API_DOCS_ENABLED:false}
-  swagger-ui:
-    enabled: ${SPRINGDOC_SWAGGER_UI_ENABLED:false}
-
 management:
   endpoints:
     web:
@@ -39,9 +33,12 @@ spring:
       max-request-size: 10MB
 
 springdoc:
+  api-docs:
+    enabled: ${SPRINGDOC_API_DOCS_ENABLED:true}
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
   swagger-ui:
+    enabled: ${SPRINGDOC_SWAGGER_UI_ENABLED:true}
     path: /swagger
     operations-sorter: alpha
 
