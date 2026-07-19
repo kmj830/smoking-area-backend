@@ -44,7 +44,8 @@ dependencies {
 	/*
 	 * 개발 도구
 	 */
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// 운영 환경 메모리 사용량을 낮추기 위해 devtools는 제외
+	compileOnly 'org.springframework.boot:spring-boot-devtools'
 
 	/*
 	 * 실제 애플리케이션 실행용 PostgreSQL

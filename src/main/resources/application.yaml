@@ -1,6 +1,18 @@
 server:
   port: ${PORT:8080}
 
+springdoc:
+  api-docs:
+    enabled: ${SPRINGDOC_API_DOCS_ENABLED:false}
+  swagger-ui:
+    enabled: ${SPRINGDOC_SWAGGER_UI_ENABLED:false}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
 app:
   data-initializer:
     enabled: ${DATA_INITIALIZER_ENABLED:false}
