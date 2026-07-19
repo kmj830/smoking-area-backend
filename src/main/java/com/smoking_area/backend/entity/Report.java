@@ -28,7 +28,7 @@ public class Report extends BaseEntity {
      * 신규 흡연구역 제보에서는 아직 등록된 흡연구역이 없으므로 null이다.
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "smoking_area_id")
+    @JoinColumn(name = "smoking_area_id", nullable = true)
     private SmokingArea smokingArea;
 
     /**
