@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -28,12 +26,9 @@ public class User extends BaseEntity {
     private String role;
 
     @Builder
-
     public User(Long kakaoId, String nickname, String role) {
         this.kakaoId = kakaoId;
         this.nickname = nickname;
         this.role = role;
     }
-
-
 }

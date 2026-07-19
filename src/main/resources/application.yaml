@@ -1,6 +1,10 @@
 server:
   port: ${PORT:8080}
 
+app:
+  data-initializer:
+    enabled: ${DATA_INITIALIZER_ENABLED:false}
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
