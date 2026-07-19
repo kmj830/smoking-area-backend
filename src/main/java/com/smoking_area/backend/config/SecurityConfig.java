@@ -32,7 +32,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").permitAll()
                         .anyRequest().authenticated())
 
-                // --- 추가된 부분: 기본 아이디/비밀번호 검사기 앞에 우리가 만든 JWT 필터를 꽂아 넣습니다. ---
+                // Bean 순환 참조를 막기 위해 스프링에 등록하지 않은 필터 인스턴스를 이곳에서 안전하게 직접 생성해 꽂아 넣습니다.
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

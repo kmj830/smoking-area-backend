@@ -13,6 +13,7 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
 
+// 중요: 여기에 @Component가 붙어 있으면 중복 등록 및 순환 참조 에러가 납니다. 절대 붙이지 마세요!
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
@@ -21,7 +22,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        
+
         // 1. Request Header에서 토큰 추출
         String token = resolveToken(httpServletRequest);
 
@@ -30,7 +31,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        
+
         // 3. 다음 필터로 이동
         chain.doFilter(request, response);
     }
